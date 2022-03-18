@@ -25,11 +25,27 @@ def replace_value(resource, orginal_str, item, obj):
 # for legacy record it still uses plural;
 def get_query_dict(resource, label="", uri="", record_obj=None):
     """query dict"""
-    graphdb_url = current_app.config["SPARQL_URL"]
+
+    knowledge_graph_url = (
+        current_app.config["SPARQL_URL"]
+        + current_app.config["SPARAL_REPOSITORY"]
+        + current_app.config["REPOSITORY_KNOWLEDGE_GRAPH_CORE"]
+    )
+    vocab_graph_url = (
+        current_app.config["SPARQL_URL"]
+        + current_app.config["SPARAL_REPOSITORY"]
+        + current_app.config["REPOSITORY_VOCAB_CORE"]
+    )
+    qudt_graph_url = (
+        current_app.config["SPARQL_URL"]
+        + current_app.config["SPARAL_REPOSITORY"]
+        + current_app.config["SPARAL_REPOSITORY_QUDT"]
+    )
+
     query_dict = {
         "person": {
-            "query_endpoint": graphdb_url + "repositories/knowledge_graph_core",
-            "post_endpoint": graphdb_url + "repositories/knowledge_graph_core/statements",
+            "query_endpoint": knowledge_graph_url,
+            "post_endpoint": knowledge_graph_url + "/statements",
             "query": """
                 PREFIX schema: <http://schema.org/>
                 select * from <https://w3id.org/tern/resources/>
@@ -56,8 +72,8 @@ def get_query_dict(resource, label="", uri="", record_obj=None):
             """,
         },
         "organization": {
-            "query_endpoint": graphdb_url + "repositories/knowledge_graph_core",
-            "post_endpoint": graphdb_url + "repositories/knowledge_graph_core/statements",
+            "query_endpoint": knowledge_graph_url,
+            "post_endpoint": knowledge_graph_url + "/statements",
             "query": """
                 PREFIX schema: <http://schema.org/>
                 select * from <https://w3id.org/tern/resources/>
@@ -80,8 +96,8 @@ def get_query_dict(resource, label="", uri="", record_obj=None):
             """,
         },
         "instrument": {
-            "query_endpoint": graphdb_url + "repositories/knowledge_graph_core",
-            "post_endpoint": graphdb_url + "repositories/knowledge_graph_core/statements",
+            "query_endpoint": knowledge_graph_url,
+            "post_endpoint": knowledge_graph_url + "/statements",
             "query": """
                 PREFIX tern: <https://w3id.org/tern/ontologies/tern/>
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -106,8 +122,8 @@ def get_query_dict(resource, label="", uri="", record_obj=None):
             """,
         },
         "parameter": {
-            "query_endpoint": graphdb_url + "repositories/tern_vocabs_core",
-            "post_endpoint": graphdb_url + "repositories/tern_vocabs_core/statements",
+            "query_endpoint": vocab_graph_url,
+            "post_endpoint": vocab_graph_url + "/statements",
             "query": """
                 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
                 select * where {
@@ -133,8 +149,8 @@ def get_query_dict(resource, label="", uri="", record_obj=None):
             """,
         },
         "platform": {
-            "query_endpoint": graphdb_url + "repositories/knowledge_graph_core",
-            "post_endpoint": graphdb_url + "repositories/knowledge_graph_core/statements",
+            "query_endpoint": knowledge_graph_url,
+            "post_endpoint": knowledge_graph_url + "/statements",
             "query": """
                 PREFIX tern: <https://w3id.org/tern/ontologies/tern/>
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -157,8 +173,8 @@ def get_query_dict(resource, label="", uri="", record_obj=None):
             """,
         },
         "unit": {
-            "query_endpoint": graphdb_url + "repositories/qudt_units",
-            "post_endpoint": graphdb_url + "repositories/qudt_units/statements",
+            "query_endpoint": qudt_graph_url,
+            "post_endpoint": qudt_graph_url + "/statements",
             "query": """
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 PREFIX qudt: <http://qudt.org/schema/qudt/>
@@ -181,8 +197,8 @@ def get_query_dict(resource, label="", uri="", record_obj=None):
             """,
         },
         "organization_site": {
-            "query_endpoint": graphdb_url + "repositories/knowledge_graph_core",
-            "post_endpoint": graphdb_url + "repositories/knowledge_graph_core/statements",
+            "query_endpoint": knowledge_graph_url,
+            "post_endpoint": knowledge_graph_url + "/statements",
             "query": """
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 PREFIX org: <http://www.w3.org/ns/org#>
@@ -207,8 +223,8 @@ def get_query_dict(resource, label="", uri="", record_obj=None):
             """,
         },
         "postal_address": {
-            "query_endpoint": graphdb_url + "repositories/knowledge_graph_core",
-            "post_endpoint": graphdb_url + "repositories/knowledge_graph_core/statements",
+            "query_endpoint": knowledge_graph_url,
+            "post_endpoint": knowledge_graph_url + "/statements",
             "query": """
                 PREFIX schema: <http://schema.org/>
                 PREFIX tern-org: <https://w3id.org/tern/ontologies/org/>

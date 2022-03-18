@@ -21,7 +21,11 @@ def sparql_endpoint_get():
         headers.update({header[0]: header[1]})
 
     query = request.values.get("query")
-    query_endpoint = current_app.config["SPARQL_URL"] + "repositories/" + current_app.config["SPARAL_REPOSITORY"]
+    query_endpoint = (
+        current_app.config["SPARQL_URL"]
+        + current_app.config["SPARAL_REPOSITORY"]
+        + current_app.config["SPARAL_REPOSITORY_KNOWLEDGE_GRAPH_CORE"]
+    )
 
     r = requests.get(
         query_endpoint,
@@ -54,8 +58,17 @@ def sparql_endpoint_post():
 
     # Set the parameters for a SPARQL 1.1 UPDATE query
     query = request.values.get("update")
-    query_endpoint = current_app.config["SPARQL_URL"] + "repositories/" + current_app.config["SPARAL_REPOSITORY"]
-    url = current_app.config["SPARQL_URL"] + "repositories/" + current_app.config["SPARAL_REPOSITORY"] + "/statements"
+    query_endpoint = (
+        current_app.config["SPARQL_URL"]
+        + current_app.config["SPARAL_REPOSITORY"]
+        + current_app.config["SPARAL_REPOSITORY_KNOWLEDGE_GRAPH_CORE"]
+    )
+    url = (
+        current_app.config["SPARQL_URL"]
+        + current_app.config["SPARAL_REPOSITORY"]
+        + current_app.config["SPARAL_REPOSITORY_KNOWLEDGE_GRAPH_CORE"]
+        + "/statements"
+    )
 
     data_key = "update"
     if not query:
