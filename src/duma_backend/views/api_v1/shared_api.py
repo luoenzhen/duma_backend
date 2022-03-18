@@ -1,15 +1,10 @@
-# Genrated by apigen.py
-
 import logging
 
 import requests
-from flask import Response, abort, current_app, json, jsonify, redirect, request
+from flask import current_app, json, jsonify, request
 from flask_tern import openapi
-from flask_tern.auth import current_user, require_user
+from flask_tern.auth import require_user
 from flask_tern.auth.oidc import oauth
-from flask_tern.db import db
-from flask_tern.logging import create_audit_event, log_audit
-from sqlalchemy import and_, not_, or_, update
 
 from .blueprint import bp
 
