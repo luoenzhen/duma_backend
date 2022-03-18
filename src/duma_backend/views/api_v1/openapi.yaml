@@ -1,14 +1,78 @@
 openapi: "3.0.0"
 
 info:
-  title: Example
-  version: "1.0"
+  title: DUMA
+  version: "2.0"
 # servers:
 #   # base path for api
 #   # e.g. swagger ui will be at /api/v1.0/ui/
 #   - url: /api/v1.0
 
 components:
+  schemas:
+    FromSHaRED:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
+        next:
+          type: integer
+          format: int32
+        previous:
+          type: integer
+          format: int32
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              uuid:
+                type: string
+              url:
+                type: string
+    ToSHaRED:
+      type: object
+      properties:
+        userAddedCategory:
+          type: string
+        label:
+          type: string
+        uri:
+          type: string
+        description:
+          type: string
+        duma_path:
+          type: string
+        url:
+          type: string
+    FromGraphDB:
+      type: object
+      properties:
+        label:
+          type: string
+    ToGraphDB:
+      type: object
+      properties:
+        label:
+          type: string
+
+  examples:
+    FromSHaREDExample:
+      value:
+        id: todo
+    ToSHaREDExample:
+      value:
+        id: todo
+    FromGraphDBExample:
+      value:
+        label: Moisture Meter
+    ToGraphDBExample:
+      value:
+        label: Moisture Meter
+
   securitySchemes:
     BasicAuth:
       type: http
@@ -37,35 +101,142 @@ security:
   - ApiKeyAuth: []
 
 paths:
-  /example:
+  /shared/document:
     get:
-      summary: Generate greeting
-      description: Generates a greeting message.
+      tags:
+        - shared
+      summary: get document contains records required to be reviewed from SHaRED
+      description: This is to get SHaRED records to be reviewed in DUMA
       responses:
         "200":
-          description: greeting response
+          description: a list of records pulled from SHaRED
           content:
             application/json:
               schema:
-                type: object
-  /example/{name}:
-    post:
-      summary: Generate greeting
-      description: Generates a greeting message.
+                items:
+                  $ref: "#/components/schemas/FromSHaRED"
+              examples:
+                items:
+                  $ref: "#/components/examples/FromSHaREDExample"
+    put:
+      tags:
+        - shared
+      summary: push back document with reviewed records from DUMA
+      description: This is to push back document to SHaRED which contains reviewed records from librarians/reviewers on DUMA
+      requestBody:
+        description: the body of the request to specify the document content in JSON format
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ToSHaRED"
       responses:
         "200":
-          description: greeting response
+          description: successfully push the document to SHaRED
           content:
             application/json:
               schema:
-                type: object
+                items:
+                  $ref: "#/components/schemas/ToSHaRED"
+              examples:
+                items:
+                  $ref: "#/components/examples/ToSHaREDExample"
+        "400":
+          description: Invalid request
         "403":
           description: Forbidden
+    post:
+      tags:
+        - shared
+      summary: push back document with reviewed records from DUMA
+      description: This is to push back document to SHaRED which contains reviewed records from librarians/reviewers on DUMA
+      requestBody:
+        description: the body of the request to specify the document content in JSON format
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ToSHaRED"
+      responses:
+        "200":
+          description: successfully push the document to SHaRED
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/ToSHaRED"
+              examples:
+                items:
+                  $ref: "#/components/examples/ToSHaREDExample"
+        "400":
+          description: Invalid request
+        "403":
+          description: Forbidden
+  /graphdb/search/{resource}/{label}:
+    get:
+      tags:
+        - graphdb
+      summary: get records from GraphDB
+      description: This is to get records from GraphDB
       parameters:
-        - name: name
+        - name: resource
           in: path
-          description: Name of the person to greet.
+          description: resource type of the record
           required: true
           schema:
             type: string
-            example: "dave"
+            example: instrument
+        - name: label
+          in: path
+          description: label value of the record
+          required: true
+          schema:
+            type: string
+            example: Moisture Meter
+      responses:
+        "200":
+          description: a list of records pulled from GraphDB
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/FromGraphDB"
+              examples:
+                items:
+                  $ref: "#/components/examples/FromGraphDBExample"
+  /graphdb/post/{resource}:
+    post:
+      tags:
+        - graphdb
+      summary: post records to GraphDB
+      description: This is to post records to GraphDB
+      parameters:
+        - name: resource
+          in: path
+          description: resource type of the record
+          required: true
+          schema:
+            type: string
+            example: instrument
+      requestBody:
+        description: the body of the request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ToGraphDB"
+      responses:
+        "200":
+          description: successfully post records to GraphDB
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/ToSHaRED"
+              examples:
+                items:
+                  $ref: "#/components/examples/ToGraphDBExample"
+        "400":
+          description: Invalid request
+        "403":
+          description: Forbidden
