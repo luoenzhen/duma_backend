@@ -1,0 +1,79 @@
+image: ternau/bb-python:3.8-alpine
+
+definitions:
+  # generic re-usable steps
+  steps:
+    - step: &envstep
+      # use a multiline step to set environment variables
+      - script: &setenv |
+          export IMAGE_NAME=ternau/duma_backend
+
+    - step: &build-test
+        script:
+          - *setenv
+          # generate version.py file
+          - export VERSION=$(python3 setup.py --version)
+          # build python pkg
+          - rm -fr dist
+          - python3 setup.py bdist_wheel
+          # TODO: build labels?
+          - docker build -t $IMAGE_NAME .
+          - docker run --rm -v $(pwd):/workdir -w /workdir -u root --entrypoint ./ci-scripts/run-tests.sh $IMAGE_NAME
+          # smoke test image
+          - ./ci-scripts/smoke-test.sh $IMAGE_NAME
+        services:
+          - docker
+          - postgres
+
+    - step: &build-push
+        script:
+          - *setenv
+          # generate version.py file
+          - export VERSION=$(python3 setup.py --version)
+          # build python pkg
+          - rm -fr dist
+          - python3 setup.py bdist_wheel
+          # TODO: build labels?
+          - docker build -t $IMAGE_NAME .
+          - docker run --rm -v $(pwd):/workdir -w /workdir -u root --entrypoint ./ci-scripts/run-tests.sh $IMAGE_NAME
+          # smoke test image
+          - ./ci-scripts/smoke-test.sh $IMAGE_NAME
+          # python pkg version may contain '+' wich is not allow in docker tag
+          - export IMAGE_TAG=${VERSION/+/-}
+          # re-tag image
+          - docker tag $IMAGE_NAME $IMAGE_NAME:$IMAGE_TAG
+          - docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+          - docker push $IMAGE_NAME
+          - docker push $IMAGE_NAME:$IMAGE_TAG
+        services:
+          - docker
+          - postgres
+
+  # services used in pipelines
+  services:
+    postgres:
+      image: postgres:11
+      variables:
+        POSTGRES_PASSWORD: postgres
+
+pipelines:
+
+  branches:
+    develop:
+      - step: *build-test
+
+    master:
+      - step: *build-push
+
+  tags:
+    '**':
+      - step: *build-push
+
+  pull-requests:
+    '**':
+      - step: *build-test
+
+  # tags:
+  #   # pull image that fits this revision ?
+  #   # what if image does not exist ? (either wrong branch or revision tagged that does not have a build? or tag and revision pushed at the same time?)
+  #   # current new tag probably also hides old $(git revision --all) .... not sure how to recreate?

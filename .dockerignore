@@ -1,0 +1,9 @@
+# exclude everything
+*
+
+# include requirements and python pkg files
+!requirements*
+!dist/
+
+# include build-files
+!build-files/

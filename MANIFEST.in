@@ -1,0 +1,23 @@
+# Exclude all
+exclude * .*
+prune *
+prune .*
+
+# include all sources in src tar ball
+graft docs
+graft src
+graft tests
+
+include .coveragerc
+include .editorconfig
+
+include requirements*
+
+include AUTHORS.rst
+include CHANGELOG.rst
+include CONTRIBUTING.rst
+include LICENSE
+include README.rst
+include MANIFEST.in
+
+global-exclude docs/_build/** *.py[cod] __pycache__/* *.so *.dylib
