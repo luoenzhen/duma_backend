@@ -17,4 +17,8 @@ def home():
 @require_user
 def whoami():
     """Check login status and return user info if authenticated."""
-    return jsonify(current_user._get_current_object())
+    # only return necessary user info
+    logger = logging.getLogger(__name__)
+    logger.info("\tCalling whoami()\n")
+    user = {"id": current_user.id, "name": current_user.name, "roles": current_user.roles}
+    return jsonify(user)
