@@ -2,6 +2,7 @@ git+https://bitbucket.org/terndatateam/flask_tern.git@0.7.1
 Flask<2.0.0
 MarkupSafe<2.1.0
 requests==2.24.0
+Authlib==0.15.5
 rdflib==5.0.0
 tern_rdf@https://bitbucket.org/terndatateam/tern_rdf/get/0.0.33.zip
 rdf_orm@https://github.com/luoenzhen/rdf_orm/archive/0.2.7.zip
