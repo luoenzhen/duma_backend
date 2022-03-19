@@ -1,3 +1,5 @@
+import logging
+
 from flask import Blueprint, jsonify, redirect, url_for
 from flask_tern.auth import current_user, require_user
 
