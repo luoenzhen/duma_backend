@@ -29,12 +29,12 @@ def get_query_dict(resource, label="", uri="", record_obj=None):
     knowledge_graph_url = (
         current_app.config["SPARQL_URL"]
         + current_app.config["SPARAL_REPOSITORY"]
-        + current_app.config["REPOSITORY_KNOWLEDGE_GRAPH_CORE"]
+        + current_app.config["SPARAL_REPOSITORY_KNOWLEDGE_GRAPH_CORE"]
     )
     vocab_graph_url = (
         current_app.config["SPARQL_URL"]
         + current_app.config["SPARAL_REPOSITORY"]
-        + current_app.config["REPOSITORY_VOCAB_CORE"]
+        + current_app.config["SPARAL_REPOSITORY_VOCAB_CORE"]
     )
     qudt_graph_url = (
         current_app.config["SPARQL_URL"]
