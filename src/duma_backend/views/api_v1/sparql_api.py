@@ -23,8 +23,8 @@ def sparql_endpoint_get():
     query = request.values.get("query")
     query_endpoint = (
         current_app.config["SPARQL_URL"]
-        + current_app.config["SPARAL_REPOSITORY"]
-        + current_app.config["SPARAL_REPOSITORY_KNOWLEDGE_GRAPH_CORE"]
+        + current_app.config["SPARQL_REPOSITORY"]
+        + current_app.config["SPARQL_REPOSITORY_KNOWLEDGE_GRAPH_CORE"]
     )
 
     r = requests.get(
@@ -60,13 +60,13 @@ def sparql_endpoint_post():
     query = request.values.get("update")
     query_endpoint = (
         current_app.config["SPARQL_URL"]
-        + current_app.config["SPARAL_REPOSITORY"]
-        + current_app.config["SPARAL_REPOSITORY_KNOWLEDGE_GRAPH_CORE"]
+        + current_app.config["SPARQL_REPOSITORY"]
+        + current_app.config["SPARQL_REPOSITORY_KNOWLEDGE_GRAPH_CORE"]
     )
     url = (
         current_app.config["SPARQL_URL"]
-        + current_app.config["SPARAL_REPOSITORY"]
-        + current_app.config["SPARAL_REPOSITORY_KNOWLEDGE_GRAPH_CORE"]
+        + current_app.config["SPARQL_REPOSITORY"]
+        + current_app.config["SPARQL_REPOSITORY_KNOWLEDGE_GRAPH_CORE"]
         + "/statements"
     )
 
