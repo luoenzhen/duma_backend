@@ -46,7 +46,7 @@ def sparql_endpoint_get():
         if header.lower() in {"content-encoding", "content-length"}:
             continue
         response.headers[header] = r.headers[header]
-        del response.headers["content-length"]
+    del response.headers["content-length"]
     print("\nheader\n", response.headers)
     return response
 
