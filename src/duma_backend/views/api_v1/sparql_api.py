@@ -37,16 +37,7 @@ def sparql_endpoint_get():
 
     response = Response(response=r.content.decode("utf-8"), status=r.status_code)
     # print("\nresponse\n", response.data)
-
-    for header in r.headers:
-        # print("header:", header)
-        # Return the response headers from the SPARQL endpoint but skip the content-encoding header.
-        # This is skipped because GraphDB is returning the content-encoding value as
-        # gzip when the content is not gzip-encoded.
-        if header.lower() in {"content-encoding", "content-length"}:
-            continue
-        response.headers[header] = r.headers[header]
-    del response.headers["content-length"]
+    response.headers["content-type"] = r.headers["content-type"]
     print("\nheader\n", response.headers)
     return response
 
